@@ -173,16 +173,17 @@ struct DotMatrix: View {
         columns.map { row * 17 + $0 }
     }
 
-    private static let mouseBodyKeys: Set<Int> = Set(
-        line(1, [6, 7, 8, 9, 10]) +
-        line(2, [4, 5, 11, 12]) +
-        line(3, [3, 13]) +
-        (4...15).flatMap { line($0, [2, 14]) } +
-        line(16, [3, 13]) +
-        line(17, [3, 13]) +
-        line(18, [4, 5, 11, 12]) +
-        line(19, [6, 7, 8, 9, 10])
-    )
+    private static let mouseBodyKeys: Set<Int> = {
+        var keys: [Int] = line(1, [6, 7, 8, 9, 10])
+        keys += line(2, [4, 5, 11, 12])
+        keys += line(3, [3, 13])
+        keys += (4...15).flatMap { line($0, [2, 14]) }
+        keys += line(16, [3, 13])
+        keys += line(17, [3, 13])
+        keys += line(18, [4, 5, 11, 12])
+        keys += line(19, [6, 7, 8, 9, 10])
+        return Set(keys)
+    }()
 
     private static let arrowUpKeys: Set<Int> = Set(
         line(4, [8]) +
@@ -206,14 +207,15 @@ struct DotMatrix: View {
 
     private static let mouseSeamKeys: Set<Int> = Set(line(11, Array(3...13)))
 
-    private static let lockBodyKeys: Set<Int> = Set(
-        line(1, Array(6...10)) +
-        line(2, [5, 11]) +
-        (3...6).flatMap { line($0, [4, 12]) } +
-        line(7, Array(3...13)) +
-        (8...14).flatMap { line($0, [2, 14]) } +
-        line(15, Array(3...13))
-    )
+    private static let lockBodyKeys: Set<Int> = {
+        var keys: [Int] = line(1, Array(6...10))
+        keys += line(2, [5, 11])
+        keys += (3...6).flatMap { line($0, [4, 12]) }
+        keys += line(7, Array(3...13))
+        keys += (8...14).flatMap { line($0, [2, 14]) }
+        keys += line(15, Array(3...13))
+        return Set(keys)
+    }()
 
     private static let lockKeyholeKeys: Set<Int> = Set(
         line(10, [8]) +
