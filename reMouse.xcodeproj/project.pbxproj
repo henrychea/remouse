@@ -1,0 +1,306 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BB0000000000000000000001 /* reMouseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000001 /* reMouseApp.swift */; };
+		BB0000000000000000000002 /* ScrollTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000002 /* ScrollTap.swift */; };
+		BB0000000000000000000003 /* ScrollInverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000003 /* ScrollInverter.swift */; };
+		BB0000000000000000000004 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000004 /* Accessibility.swift */; };
+		BB0000000000000000000005 /* ConflictCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000005 /* ConflictCheck.swift */; };
+		BB0000000000000000000006 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000006 /* Settings.swift */; };
+		BB0000000000000000000007 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000007 /* Views.swift */; };
+		BB0000000000000000000008 /* DotMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000011 /* DotMatrix.swift */; };
+		BB0000000000000000000009 /* Doto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000012 /* Doto.ttf */; };
+		BB0000000000000000000010 /* Doto-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000013 /* Doto-OFL.txt */; };
+		BB0000000000000000000011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000014 /* Assets.xcassets */; };
+		BB0000000000000000000014 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000018 /* PrivacyInfo.xcprivacy */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA0000000000000000000001 /* reMouseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = reMouseApp.swift; sourceTree = "<group>"; };
+		AA0000000000000000000002 /* ScrollTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollTap.swift; sourceTree = "<group>"; };
+		AA0000000000000000000003 /* ScrollInverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollInverter.swift; sourceTree = "<group>"; };
+		AA0000000000000000000004 /* Accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
+		AA0000000000000000000005 /* ConflictCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConflictCheck.swift; sourceTree = "<group>"; };
+		AA0000000000000000000006 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		AA0000000000000000000007 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		AA0000000000000000000008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA0000000000000000000009 /* reMouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = reMouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000010 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		AA0000000000000000000011 /* DotMatrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotMatrix.swift; sourceTree = "<group>"; };
+		AA0000000000000000000012 /* Doto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Doto.ttf; sourceTree = "<group>"; };
+		AA0000000000000000000013 /* Doto-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Doto-OFL.txt"; sourceTree = "<group>"; };
+		AA0000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA0000000000000000000018 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CC0000000000000000000010 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CC0000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				CC0000000000000000000002 /* reMouse */,
+				AA0000000000000000000010 /* README.md */,
+				CC0000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CC0000000000000000000002 /* reMouse */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000001 /* reMouseApp.swift */,
+				AA0000000000000000000002 /* ScrollTap.swift */,
+				AA0000000000000000000003 /* ScrollInverter.swift */,
+				AA0000000000000000000004 /* Accessibility.swift */,
+				AA0000000000000000000005 /* ConflictCheck.swift */,
+				AA0000000000000000000006 /* Settings.swift */,
+				AA0000000000000000000011 /* DotMatrix.swift */,
+				AA0000000000000000000007 /* Views.swift */,
+				AA0000000000000000000008 /* Info.plist */,
+				AA0000000000000000000014 /* Assets.xcassets */,
+				AA0000000000000000000018 /* PrivacyInfo.xcprivacy */,
+				CC0000000000000000000004 /* Resources */,
+			);
+			path = reMouse;
+			sourceTree = "<group>";
+		};
+		CC0000000000000000000004 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000012 /* Doto.ttf */,
+				AA0000000000000000000013 /* Doto-OFL.txt */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CC0000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000009 /* reMouse.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DD0000000000000000000002 /* reMouse */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE0000000000000000000002 /* Build configuration list for PBXNativeTarget "reMouse" */;
+			buildPhases = (
+				CC0000000000000000000020 /* Sources */,
+				CC0000000000000000000010 /* Frameworks */,
+				CC0000000000000000000030 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = reMouse;
+			productName = reMouse;
+			productReference = AA0000000000000000000009 /* reMouse.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DD0000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					DD0000000000000000000002 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = EE0000000000000000000001 /* Build configuration list for PBXProject "reMouse" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CC0000000000000000000001;
+			productRefGroup = CC0000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DD0000000000000000000002 /* reMouse */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CC0000000000000000000030 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB0000000000000000000009 /* Doto.ttf in Resources */,
+				BB0000000000000000000010 /* Doto-OFL.txt in Resources */,
+				BB0000000000000000000011 /* Assets.xcassets in Resources */,
+				BB0000000000000000000014 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CC0000000000000000000020 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB0000000000000000000001 /* reMouseApp.swift in Sources */,
+				BB0000000000000000000002 /* ScrollTap.swift in Sources */,
+				BB0000000000000000000003 /* ScrollInverter.swift in Sources */,
+				BB0000000000000000000004 /* Accessibility.swift in Sources */,
+				BB0000000000000000000005 /* ConflictCheck.swift in Sources */,
+				BB0000000000000000000006 /* Settings.swift in Sources */,
+				BB0000000000000000000007 /* Views.swift in Sources */,
+				BB0000000000000000000008 /* DotMatrix.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FF0000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FF0000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FF0000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = reMouse/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.henrychea.reMouse;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		FF0000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = reMouse/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.henrychea.reMouse;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EE0000000000000000000001 /* Build configuration list for PBXProject "reMouse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF0000000000000000000001 /* Debug */,
+				FF0000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EE0000000000000000000002 /* Build configuration list for PBXNativeTarget "reMouse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF0000000000000000000003 /* Debug */,
+				FF0000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DD0000000000000000000001 /* Project object */;
+}

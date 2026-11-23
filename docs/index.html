@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>re:Mouse — Invert your mouse wheel</title>
+<meta name="description" content="A tiny macOS menu-bar app that inverts scroll direction for wheel mice only. Your trackpad stays natural.">
+<meta name="theme-color" content="#0A0A0A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="re:Mouse — Invert your mouse wheel. Leave your trackpad alone.">
+<meta property="og:description" content="One switch. Wheel mice scroll the classic way, trackpad and Magic Mouse stay natural. macOS 13.1+, MIT.">
+<meta property="og:image" content="assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="assets/og.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="preload" href="assets/fonts/Doto.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <a class="brand" href="#top" aria-label="re:Mouse home">
+    <img src="assets/icon-192.png" alt="" width="28" height="28">
+    <span>re:Mouse</span>
+  </a>
+  <nav aria-label="Primary">
+    <a href="#features">Features</a>
+    <a href="#faq">FAQ</a>
+    <a href="https://github.com/henrychea/remouse">GitHub</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="led" aria-hidden="true"></span> macOS menu-bar utility</p>
+      <h1>Invert your mouse wheel.<br><span>Leave your trackpad alone.</span></h1>
+      <p class="lede">re:Mouse flips scroll direction for wheel mice only. Trackpad and Magic Mouse gestures stay natural. One switch, nothing else to configure.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/henrychea/remouse/releases/latest">Download (free)</a>
+        <a class="btn btn-ghost" href="https://github.com/henrychea/remouse">View source</a>
+      </div>
+      <p class="meta">macOS 13.1+ · MIT · No network</p>
+    </div>
+
+    <div class="stage">
+      <div class="dial">
+        <canvas id="mouse" width="252" height="312" tabindex="0" role="img" aria-label="Dot-matrix mouse. Arrow points up: scroll inverted. Click or scroll here to flip."></canvas>
+      </div>
+      <button class="pill" id="toggle" type="button" role="switch" aria-checked="true">
+        <span class="pill-label">Invert scroll</span>
+        <span class="knob" aria-hidden="true"></span>
+      </button>
+      <p class="status" id="status" aria-live="polite">Mouse: inverted · Trackpad: untouched</p>
+      <p class="hint">Click or scroll the mouse to flip it.</p>
+    </div>
+  </section>
+
+  <section class="demo" aria-labelledby="demo-title">
+    <h2 id="demo-title" class="sr-only">Demo</h2>
+    <div class="frame">
+      <video autoplay muted loop playsinline preload="metadata" poster="assets/shots/main-inverted.png" aria-label="re:Mouse settings window switching inversion on and off">
+        <source src="assets/demo.mp4" type="video/mp4">
+      </video>
+    </div>
+  </section>
+
+  <section id="features" aria-labelledby="features-title">
+    <p class="kicker">// Features</p>
+    <h2 id="features-title">Does one thing. Gets out of the way.</h2>
+    <ul class="grid features">
+      <li><span class="dot-icon" data-glyph="wheel"></span><h3>Wheel only</h3><p>Discrete wheel events are inverted. Continuous trackpad and Magic Mouse events pass through untouched.</p></li>
+      <li><span class="dot-icon" data-glyph="switch"></span><h3>One switch</h3><p>No per-app rules, no acceleration curves, no button remapping. On or off.</p></li>
+      <li><span class="dot-icon" data-glyph="bolt"></span><h3>Light</h3><p>A single event tap. No polling, no helper daemons, no third-party dependencies.</p></li>
+      <li><span class="dot-icon" data-glyph="warn"></span><h3>Conflict check</h3><p>Finds other scroll tools that would double-invert and offers to quit them.</p></li>
+      <li><span class="dot-icon" data-glyph="lock"></span><h3>Private</h3><p>No network access, no analytics, no data stored beyond your settings.</p></li>
+      <li><span class="dot-icon" data-glyph="code"></span><h3>Open source</h3><p>MIT licensed. Read the whole thing in an afternoon.</p></li>
+    </ul>
+  </section>
+
+  <section id="screens" aria-labelledby="screens-title">
+    <p class="kicker">// Screens</p>
+    <h2 id="screens-title">Small window. Loud dots.</h2>
+    <div class="grid shots">
+      <figure><img src="assets/shots/main-inverted.png" alt="Main window with inversion on: blue arrow pointing up" width="720" height="840" loading="lazy"><figcaption>Inverted</figcaption></figure>
+      <figure><img src="assets/shots/main-standard.png" alt="Main window with inversion off: red arrow pointing down" width="720" height="840" loading="lazy"><figcaption>Standard</figcaption></figure>
+      <figure><img src="assets/shots/conflict-3.png" alt="Conflict warning listing three other scroll apps with Quit buttons" width="720" height="840" loading="lazy"><figcaption>Conflicts</figcaption></figure>
+      <figure><img src="assets/shots/permission.png" alt="Accessibility permission prompt" width="720" height="840" loading="lazy"><figcaption>Permission</figcaption></figure>
+    </div>
+    <figure class="menubar"><img src="assets/shots/menu-bar.png" alt="Menu-bar dropdown with invert toggle, settings and quit" width="480" height="332" loading="lazy"><figcaption>Menu bar</figcaption></figure>
+  </section>
+
+  <section id="conflicts" class="split" aria-labelledby="conflicts-title">
+    <div>
+      <p class="kicker warn">// Conflict check</p>
+      <h2 id="conflicts-title">Two inverters cancel out.</h2>
+      <p>Only one tool should rewrite scroll events. At launch, and each time you switch inversion on, re:Mouse looks for the known scroll inverters and gives each one a <strong>Quit</strong> button.</p>
+    </div>
+    <table class="apps">
+      <caption class="sr-only">Known conflicting apps</caption>
+      <thead><tr><th scope="col">App</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><td>LinearMouse</td><td><span class="tag">Detected</span></td></tr>
+        <tr><td>Scroll Reverser</td><td><span class="tag">Detected</span></td></tr>
+        <tr><td>Mac Mouse Fix</td><td><span class="tag">Detected</span></td></tr>
+        <tr><td>Mos</td><td><span class="tag">Detected</span></td></tr>
+        <tr><td>UnnaturalScrollWheels</td><td><span class="tag">Detected</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="how" aria-labelledby="how-title">
+    <p class="kicker">// How it works</p>
+    <h2 id="how-title">Continuous or discrete. That is the whole rule.</h2>
+    <ol class="steps">
+      <li><span class="n">01</span><p>A head-insert event tap listens for scroll events in your session.</p></li>
+      <li><span class="n">02</span><p>Trackpads and the Magic Mouse send <em>continuous</em> events. Those return untouched.</p></li>
+      <li><span class="n">03</span><p>Wheel mice send <em>discrete</em> events. Their deltas are negated, then passed on.</p></li>
+    </ol>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-title">
+    <p class="kicker">// FAQ</p>
+    <h2 id="faq-title">Questions</h2>
+    <div class="faq">
+      <details><summary>Is it free?</summary><p>Yes. MIT licensed, free to download, use and modify. Builds from source with Xcode 15 or later.</p></details>
+      <details><summary>Why not on the App Store?</summary><p>The App Sandbox blocks changing scroll events: a sandboxed app can only observe them, never invert them. So re:Mouse ships as a free download outside the App Store.</p></details>
+      <details><summary>Why not LinearMouse, Scroll Reverser or Mac Mouse Fix?</summary><p>They are good, larger tools with many options. re:Mouse is for people who want one switch and nothing else.</p></details>
+      <details><summary>Does it change my trackpad?</summary><p>No. Trackpad and Magic Mouse events are continuous, and re:Mouse passes them through unchanged. Keep "Natural scrolling" on in System Settings.</p></details>
+      <details><summary>Why does it need Accessibility permission?</summary><p>macOS only lets apps with Accessibility access install an event tap that can modify input. Grant it in System Settings → Privacy &amp; Security → Accessibility.</p></details>
+      <details><summary>Does it collect any data?</summary><p>No. It makes no network connections and stores only its own settings.</p></details>
+      <details><summary>How do I uninstall it?</summary><p>Quit from the menu bar, delete reMouse.app from Applications, and remove it from the Accessibility list.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span class="brand"><img src="assets/icon-192.png" alt="" width="20" height="20"> re:Mouse</span>
+  <a href="https://github.com/henrychea/remouse">github.com/henrychea/remouse</a>
+  <span>MIT License</span>
+</footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="en" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>re:Mouse — Permission State</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config" data-stitch-original-src="685be759f84c6e4e===../../tailwind.config.js">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'electric-blue': '#4DA8FF',
+        'void-black': '#0A0A0A',
+        'amber-alert': '#FFB800',
+        'dim-led': '#3E3E44',
+        'primary': '#4DA8FF',
+        'on-primary': '#001C38',
+        'primary-container': '#0B243D',
+        'on-primary-container': '#4DA8FF',
+        'secondary': '#90ADD6',
+        'on-secondary': '#001C38',
+        'warning': '#FFB800',
+        'on-warning': '#1F1400',
+        'warning-container': '#2A1E00',
+        'on-warning-container': '#FFD15C',
+        'error': '#FF5449',
+        'on-error': '#410002',
+        'background': '#0A0A0A',
+        'on-background': '#F0F0F2',
+        'surface': '#0A0A0A',
+        'surface-container-lowest': '#060607',
+        'surface-container-low': '#121214',
+        'surface-container': '#18181B',
+        'surface-container-high': '#222226',
+        'surface-container-highest': '#2C2C32',
+        'on-surface': '#F0F0F2',
+        'on-surface-variant': '#94949E',
+        'outline': '#46464F',
+        'outline-variant': '#26262C',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '10px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '20px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '40px',
+        'page-margin': '20px',
+      },
+      fontFamily: {
+        'display': ['"Doto"', 'sans-serif'],
+        'headline': ['"Doto"', 'sans-serif'],
+        'title': ['"Doto"', 'sans-serif'],
+        'label': ['"Doto"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'caption': ['"Inter"', 'sans-serif'],
+      },
+      fontSize: {
+        'display-md': ['28px', { lineHeight: '32px', letterSpacing: '1.5px', fontWeight: '700' }],
+        'headline-sm': ['20px', { lineHeight: '24px', letterSpacing: '1.2px', fontWeight: '700' }],
+        'title-md': ['16px', { lineHeight: '20px', letterSpacing: '1.4px', fontWeight: '700' }],
+        'label-lg': ['14px', { lineHeight: '18px', letterSpacing: '1.2px', fontWeight: '600' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '1.0px', fontWeight: '600' }],
+        'body-md': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'body-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '400' }],
+        'caption-xs': ['11px', { lineHeight: '14px', letterSpacing: '0.2px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '180ms',
+        'dot-ripple': '420ms',
+        'arrow-cascade': '280ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'dot-ripple': '0ms',
+        'arrow-cascade': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'cubic-bezier(0.2, 0, 0, 1)',
+        'dot-ripple': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'arrow-cascade': 'ease-out',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400..900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    @keyframes scanlineShimmer {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(220%); }
+    }
+    .scanline-sweep {
+      animation: scanlineShimmer 5.5s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .scanline-sweep { animation: none; opacity: 0; }
+    }
+    .dot-matrix-bg {
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 8px 8px;
+    }
+    .mint-bloom {
+      filter: drop-shadow(0 0 6px rgba(77, 168, 255, 0.5));
+    }
+  </style>
+</head>
+<body class="bg-transparent text-on-surface font-body antialiased flex flex-col items-center m-0 p-0">
+
+  <!-- Compact macOS Utility Window (~360x420) in Permission State -->
+  <main class="relative w-full max-w-[360px] min-h-[420px] rounded-xl bg-surface border border-outline-variant flex flex-col justify-between overflow-hidden" style="box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);" aria-label="re:Mouse accessibility permission window">
+    <div class="pointer-events-none absolute inset-0 dot-matrix-bg opacity-80" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-24 overflow-hidden" aria-hidden="true">
+      <div class="scanline-sweep h-12 w-full bg-gradient-to-b from-transparent via-primary/5 to-transparent"></div>
+    </div>
+
+    <!-- Window Title Bar -->
+    <header class="relative z-10 flex items-center justify-between px-gutter-md pt-gutter-md pb-gutter-xs">
+      <div class="flex items-center gap-gutter-xs" aria-hidden="true">
+        <span class="h-2.5 w-2.5 rounded-full bg-surface-container-highest border border-outline"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-surface-container-highest border border-outline"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-surface-container-highest border border-outline"></span>
+      </div>
+      <span data-design-text-token="title-md" class="font-title text-title-md text-on-surface tracking-widest">re:Mouse</span>
+      <span class="w-10" aria-hidden="true"></span>
+    </header>
+
+    <!-- Center Focal Stage: Dot-Matrix Lock Icon + Permission CTA -->
+    <section class="relative z-10 flex-1 flex flex-col items-center justify-center gap-gutter-lg px-gutter-lg py-gutter-xl">
+      <div class="relative flex items-center justify-center w-36 h-36 rounded-full bg-surface-container-low border border-outline-variant" style="box-shadow: inset 0 0 24px rgba(0,0,0,0.65);">
+        <svg id="lock-matrix" width="84" height="92" viewBox="0 0 84 92" fill="none" role="img" aria-label="Dot-matrix lock icon">
+        </svg>
+      </div>
+
+      <h1 data-design-text-token="title-md" class="font-title text-title-md text-on-surface text-center uppercase tracking-widest leading-snug">
+        NEEDS ACCESSIBILITY ACCESS
+      </h1>
+
+      <!-- COMPONENT: button-primary -->
+      <button data-component-id="button-primary" data-component-type="button" data-component-variant="primary" type="button" class="inline-flex items-center justify-center rounded-full bg-primary text-on-primary px-gutter-xl py-gutter-md font-label text-label-lg uppercase tracking-widest transition-transform duration-state-change ease-state-change hover:brightness-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" style="box-shadow: 0 0 22px rgba(77, 168, 255, 0.3);">
+        <span data-design-text-token="label-lg">OPEN SETTINGS</span>
+      </button>
+    </section>
+
+    <footer class="relative z-10 flex items-center justify-between gap-gutter-sm border-t border-outline-variant bg-surface-container-lowest/80 px-gutter-md py-gutter-xs">
+      <span class="inline-flex items-center gap-gutter-xs min-w-0">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" class="text-primary shrink-0" aria-hidden="true">
+          <circle cx="3" cy="2" r="0.9"></circle><circle cx="7" cy="2" r="0.9"></circle>
+          <circle cx="2" cy="4.5" r="0.9"></circle><circle cx="5" cy="4.5" r="0.9"></circle><circle cx="8" cy="4.5" r="0.9"></circle>
+          <circle cx="3" cy="7" r="0.9"></circle><circle cx="5" cy="7" r="0.9"></circle><circle cx="7" cy="7" r="0.9"></circle>
+          <circle cx="5" cy="9" r="0.9"></circle>
+        </svg>
+        <span data-design-text-token="caption-xs" class="font-label text-caption-xs uppercase tracking-wider text-primary truncate">
+          GITHUB.COM/HENRYCHEA/REMOUSE
+        </span>
+      </span>
+      <span data-design-text-token="caption-xs" class="shrink-0 rounded-full border border-outline-variant bg-surface-container px-gutter-xs py-0.5 font-label text-caption-xs uppercase tracking-widest text-primary">
+        MIT
+      </span>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const svg = document.getElementById('lock-matrix');
+      const ns = 'http://www.w3.org/2000/svg';
+
+      // High-density 17x18 Nothing OS-style padlock
+      const shackleDots = new Set([
+        '6,1','7,1','8,1','9,1','10,1',
+        '5,2','11,2',
+        '4,3','12,3',
+        '4,4','12,4',
+        '4,5','12,5',
+        '4,6','12,6'
+      ]);
+      const bodyDots = new Set([
+        '3,7','4,7','5,7','6,7','7,7','8,7','9,7','10,7','11,7','12,7','13,7',
+        '2,8','14,8',
+        '2,9','14,9',
+        '2,10','14,10',
+        '2,11','14,11',
+        '2,12','14,12',
+        '2,13','14,13',
+        '2,14','14,14',
+        '3,15','4,15','5,15','6,15','7,15','8,15','9,15','10,15','11,15','12,15','13,15'
+      ]);
+      const keyholeDots = new Set(['8,10','7,11','8,11','9,11','8,12','8,13']);
+
+      for (let r = 0; r < 18; r++) {
+        for (let c = 0; c < 17; c++) {
+          const key = c + ',' + r;
+          const circle = document.createElementNS(ns, 'circle');
+          circle.setAttribute('cx', String((5.2 + c * 4.6).toFixed(1)));
+          circle.setAttribute('cy', String((5.5 + r * 4.6).toFixed(1)));
+          if (keyholeDots.has(key)) {
+            circle.setAttribute('r', '1.65');
+            circle.setAttribute('fill', '#4DA8FF');
+            circle.classList.add('mint-bloom');
+          } else if (shackleDots.has(key) || bodyDots.has(key)) {
+            circle.setAttribute('r', '1.35');
+            circle.setAttribute('fill', '#F0F0F2');
+            circle.setAttribute('opacity', '0.9');
+          } else {
+            circle.setAttribute('r', '0.8');
+            circle.setAttribute('fill', '#222228');
+            circle.setAttribute('opacity', '0.45');
+          }
+          svg.appendChild(circle);
+        }
+      }
+    })();
+  </script>
+
+
+</body></html>

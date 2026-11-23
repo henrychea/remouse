@@ -1,0 +1,403 @@
+<!DOCTYPE html><html lang="en" class="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>re:Mouse — Main Window</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config" data-stitch-original-src="685be759f84c6e4e===../../tailwind.config.js">/** @type {import('tailwindcss').Config} */
+globalThis.tailwind = globalThis.tailwind || {};
+globalThis.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'electric-blue': '#4DA8FF',
+        'void-black': '#0A0A0A',
+        'amber-alert': '#FFB800',
+        'dim-led': '#3E3E44',
+        'primary': '#4DA8FF',
+        'on-primary': '#001C38',
+        'primary-container': '#0B243D',
+        'on-primary-container': '#4DA8FF',
+        'secondary': '#90ADD6',
+        'on-secondary': '#001C38',
+        'warning': '#FFB800',
+        'on-warning': '#1F1400',
+        'warning-container': '#2A1E00',
+        'on-warning-container': '#FFD15C',
+        'error': '#FF5449',
+        'on-error': '#410002',
+        'background': '#0A0A0A',
+        'on-background': '#F0F0F2',
+        'surface': '#0A0A0A',
+        'surface-container-lowest': '#060607',
+        'surface-container-low': '#121214',
+        'surface-container': '#18181B',
+        'surface-container-high': '#222226',
+        'surface-container-highest': '#2C2C32',
+        'on-surface': '#F0F0F2',
+        'on-surface-variant': '#94949E',
+        'outline': '#46464F',
+        'outline-variant': '#26262C',
+      },
+      borderRadius: {
+        'sm': '6px',
+        'DEFAULT': '10px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '20px',
+        'full': '9999px',
+      },
+      spacing: {
+        'gutter-xs': '4px',
+        'gutter-sm': '8px',
+        'gutter-md': '16px',
+        'gutter-lg': '24px',
+        'gutter-xl': '32px',
+        'section': '40px',
+        'page-margin': '20px',
+      },
+      fontFamily: {
+        'display': ['"Doto"', 'sans-serif'],
+        'headline': ['"Doto"', 'sans-serif'],
+        'title': ['"Doto"', 'sans-serif'],
+        'label': ['"Doto"', 'sans-serif'],
+        'body': ['"Inter"', 'sans-serif'],
+        'caption': ['"Inter"', 'sans-serif'],
+      },
+      fontSize: {
+        'display-md': ['28px', { lineHeight: '32px', letterSpacing: '1.5px', fontWeight: '700' }],
+        'headline-sm': ['20px', { lineHeight: '24px', letterSpacing: '1.2px', fontWeight: '700' }],
+        'title-md': ['16px', { lineHeight: '20px', letterSpacing: '1.4px', fontWeight: '700' }],
+        'label-lg': ['14px', { lineHeight: '18px', letterSpacing: '1.2px', fontWeight: '600' }],
+        'label-md': ['12px', { lineHeight: '16px', letterSpacing: '1.0px', fontWeight: '600' }],
+        'body-md': ['13px', { lineHeight: '18px', letterSpacing: '0px', fontWeight: '500' }],
+        'body-sm': ['12px', { lineHeight: '16px', letterSpacing: '0px', fontWeight: '400' }],
+        'caption-xs': ['11px', { lineHeight: '14px', letterSpacing: '0.2px', fontWeight: '500' }],
+      },
+      transitionDuration: {
+        'state-change': '180ms',
+        'dot-ripple': '420ms',
+        'arrow-cascade': '280ms',
+      },
+      transitionDelay: {
+        'state-change': '0ms',
+        'dot-ripple': '0ms',
+        'arrow-cascade': '0ms',
+      },
+      transitionTimingFunction: {
+        'state-change': 'cubic-bezier(0.2, 0, 0, 1)',
+        'dot-ripple': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'arrow-cascade': 'ease-out',
+      },
+    },
+  },
+};
+if (typeof module !== 'undefined') module.exports = globalThis.tailwind.config;
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400..900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    @keyframes scanlineShimmer {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(220%); }
+    }
+    .scanline-sweep {
+      animation: scanlineShimmer 5.5s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .scanline-sweep { animation: none; opacity: 0; }
+    }
+    .dot-matrix-bg {
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 8px 8px;
+    }
+    .led-dot {
+      transition: fill 220ms ease-out, opacity 220ms ease-out, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .mint-bloom {
+      filter: drop-shadow(0 0 6px rgba(77, 168, 255, 0.55));
+    }
+    .red-bloom {
+      filter: drop-shadow(0 0 6px rgba(255, 84, 73, 0.55));
+    }
+    .pill-glow-on {
+      box-shadow: 0 0 22px rgba(77, 168, 255, 0.24), inset 0 0 12px rgba(77, 168, 255, 0.08);
+    }
+    .pill-glow-off {
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body class="bg-transparent text-on-surface font-body antialiased flex flex-col items-center m-0 p-0">
+
+  <!-- Compact macOS Utility Window (~360x420) -->
+  <main class="relative w-full max-w-[360px] min-h-[420px] rounded-xl bg-surface border border-outline-variant flex flex-col justify-between overflow-hidden" style="box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);" aria-label="re:Mouse main utility window">
+    <!-- Subtle dot-matrix substrate & scanline shimmer -->
+    <div class="pointer-events-none absolute inset-0 dot-matrix-bg opacity-80" aria-hidden="true"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-24 overflow-hidden" aria-hidden="true">
+      <div class="scanline-sweep h-12 w-full bg-gradient-to-b from-transparent via-primary/5 to-transparent"></div>
+    </div>
+
+    <!-- Window Title Bar -->
+    <header class="relative z-10 flex items-center justify-between px-gutter-md pt-gutter-md pb-gutter-xs">
+      <div class="flex items-center gap-gutter-xs" aria-hidden="true">
+        <span class="h-2.5 w-2.5 rounded-full bg-surface-container-highest border border-outline"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-surface-container-highest border border-outline"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-surface-container-highest border border-outline"></span>
+      </div>
+      <span data-design-text-token="title-md" class="font-title text-title-md text-on-surface tracking-widest">re:Mouse</span>
+      <span class="w-10" aria-hidden="true"></span>
+    </header>
+
+    <!-- Center Focal Stage: Dot-Matrix Mouse + Animated Scroll Arrow -->
+    <section class="relative z-10 flex flex-col items-center justify-center gap-gutter-md px-gutter-lg py-gutter-sm">
+      <div class="relative flex items-center justify-center w-36 h-36 rounded-full bg-surface-container-low border border-outline-variant" style="box-shadow: inset 0 0 24px rgba(0,0,0,0.65);">
+        <svg id="mouse-matrix" width="84" height="104" viewBox="0 0 84 104" fill="none" role="img" aria-label="Dot-matrix mouse with scroll direction indicator">
+          <!-- High-density Nothing OS-inspired micro-dot LED matrix -->
+        </svg>
+      </div>
+
+      <!-- Huge Pill Toggle: INVERT SCROLL -->
+      <!-- COMPONENT: toggle-description -->
+      <button id="invert-toggle" data-component-id="toggle-description" data-component-type="toggle" data-component-variant="with-description" type="button" role="switch" aria-checked="true" class="pill-glow-on w-auto min-w-[224px] flex items-center justify-between gap-gutter-md rounded-full bg-primary-container border border-primary px-gutter-md py-gutter-sm transition-colors duration-state-change ease-state-change focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <span id="invert-label" data-design-text-token="label-lg" class="font-label text-label-lg text-primary uppercase tracking-widest">INVERT SCROLL</span>
+        <span id="invert-track" class="inline-flex h-5 w-9 shrink-0 items-center rounded-full bg-primary p-0.5 transition-colors duration-state-change">
+          <span id="invert-thumb" class="h-4 w-4 rounded-full bg-on-primary translate-x-4 transition-transform duration-state-change ease-state-change"></span>
+        </span>
+      </button>
+
+      <!-- Small Status Line -->
+      <p id="status-line" data-design-text-token="label-md" class="font-label text-label-md text-primary text-center uppercase tracking-wider">
+        MOUSE: INVERTED · TRACKPAD: UNTOUCHED
+      </p>
+    </section>
+
+    <!-- Footer Row -->
+    <footer class="relative z-10 flex items-end justify-between gap-gutter-sm border-t border-outline-variant bg-surface-container-low px-gutter-md py-gutter-sm">
+      <div class="flex flex-wrap items-center gap-x-gutter-md gap-y-gutter-xs">
+        <!-- Show in menu bar switch -->
+        <label class="inline-flex items-center gap-gutter-xs cursor-pointer select-none">
+          <span data-design-text-token="caption-xs" class="font-caption text-caption-xs text-on-surface-variant">Show in menu bar</span>
+          <button data-mini-switch type="button" role="switch" aria-checked="true" aria-label="Show in menu bar" class="relative inline-flex h-4 w-7 shrink-0 items-center rounded-full bg-primary-container border border-primary p-0.5 transition-colors duration-state-change">
+            <span class="h-2.5 w-2.5 rounded-full bg-primary translate-x-3 transition-transform duration-state-change"></span>
+          </button>
+        </label>
+
+        <!-- Show in Dock switch -->
+        <label class="inline-flex items-center gap-gutter-xs cursor-pointer select-none">
+          <span data-design-text-token="caption-xs" class="font-caption text-caption-xs text-on-surface-variant">Show in Dock</span>
+          <button data-mini-switch type="button" role="switch" aria-checked="false" aria-label="Show in Dock" class="relative inline-flex h-4 w-7 shrink-0 items-center rounded-full bg-surface-container-highest border border-outline-variant p-0.5 transition-colors duration-state-change">
+            <span class="h-2.5 w-2.5 rounded-full bg-on-surface-variant translate-x-0 transition-transform duration-state-change"></span>
+          </button>
+        </label>
+
+        <!-- Launch at login switch -->
+        <label class="inline-flex items-center gap-gutter-xs cursor-pointer select-none">
+          <span data-design-text-token="caption-xs" class="font-caption text-caption-xs text-on-surface-variant">Launch at login</span>
+          <button data-mini-switch type="button" role="switch" aria-checked="false" aria-label="Launch at login" class="relative inline-flex h-4 w-7 shrink-0 items-center rounded-full bg-surface-container-highest border border-outline-variant p-0.5 transition-colors duration-state-change">
+            <span class="h-2.5 w-2.5 rounded-full bg-on-surface-variant translate-x-0 transition-transform duration-state-change"></span>
+          </button>
+        </label>
+      </div>
+
+      <!-- Quit text button -->
+      <button data-component-id="button-tertiary" data-component-type="button" data-component-variant="tertiary" type="button" class="rounded-full border border-error/50 bg-error/10 px-gutter-sm py-0.5 font-label text-caption-xs uppercase tracking-widest text-error hover:bg-error hover:text-on-error transition-colors duration-state-change">
+        <span data-design-text-token="caption-xs">QUIT</span>
+      </button>
+    </footer>
+    <div class="relative z-10 flex items-center justify-between gap-gutter-sm border-t border-outline-variant bg-surface-container-lowest/80 px-gutter-md py-gutter-xs">
+      <span class="inline-flex items-center gap-gutter-xs min-w-0">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" class="text-primary shrink-0" aria-hidden="true">
+          <circle cx="3" cy="2" r="0.9"></circle><circle cx="7" cy="2" r="0.9"></circle>
+          <circle cx="2" cy="4.5" r="0.9"></circle><circle cx="5" cy="4.5" r="0.9"></circle><circle cx="8" cy="4.5" r="0.9"></circle>
+          <circle cx="3" cy="7" r="0.9"></circle><circle cx="5" cy="7" r="0.9"></circle><circle cx="7" cy="7" r="0.9"></circle>
+          <circle cx="5" cy="9" r="0.9"></circle>
+        </svg>
+        <span data-design-text-token="caption-xs" class="font-label text-caption-xs uppercase tracking-wider text-primary truncate">
+          GITHUB.COM/HENRYCHEA/REMOUSE
+        </span>
+      </span>
+      <span data-design-text-token="caption-xs" class="shrink-0 rounded-full border border-outline-variant bg-surface-container px-gutter-xs py-0.5 font-label text-caption-xs uppercase tracking-widest text-primary">
+        MIT
+      </span>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const svg = document.getElementById('mouse-matrix');
+      const cols = 17;
+      const rows = 21;
+      const step = 4.6;
+      const offsetX = 5.2;
+      const offsetY = 6.0;
+
+      // High-density Nothing OS-style mouse silhouette (17x21)
+      const bodyOutline = new Set([
+        '6,1','7,1','8,1','9,1','10,1',
+        '4,2','5,2','11,2','12,2',
+        '3,3','13,3',
+        '2,4','14,4',
+        '2,5','14,5',
+        '2,6','14,6',
+        '2,7','14,7',
+        '2,8','14,8',
+        '2,9','14,9',
+        '2,10','14,10',
+        '2,11','14,11',
+        '2,12','14,12',
+        '2,13','14,13',
+        '2,14','14,14',
+        '2,15','14,15',
+        '3,16','13,16',
+        '3,17','13,17',
+        '4,18','5,18','11,18','12,18',
+        '6,19','7,19','8,19','9,19','10,19'
+      ]);
+
+      // Crisp scroll-wheel arrow up (inverted = true)
+      const arrowUp = new Set([
+        '8,4',
+        '7,5','8,5','9,5',
+        '6,6','8,6','10,6',
+        '8,7',
+        '8,8',
+        '8,9',
+        '8,10'
+      ]);
+
+      // Crisp scroll-wheel arrow down (inverted = false)
+      const arrowDown = new Set([
+        '8,4',
+        '8,5',
+        '8,6',
+        '8,7',
+        '6,8','8,8','10,8',
+        '7,9','8,9','9,9',
+        '8,10'
+      ]);
+
+      // Subtle button divider seam
+      const seamDots = new Set(['3,11','4,11','5,11','6,11','7,11','8,11','9,11','10,11','11,11','12,11','13,11']);
+
+      const dotMap = new Map();
+      const ns = 'http://www.w3.org/2000/svg';
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const key = c + ',' + r;
+          const circle = document.createElementNS(ns, 'circle');
+          circle.setAttribute('cx', String((offsetX + c * step).toFixed(1)));
+          circle.setAttribute('cy', String((offsetY + r * step).toFixed(1)));
+          circle.setAttribute('r', '0.9');
+          circle.classList.add('led-dot');
+          svg.appendChild(circle);
+          dotMap.set(key, { el: circle, c, r });
+        }
+      }
+
+      let inverted = true;
+
+      function renderMatrix(animateRipple) {
+        const activeArrow = inverted ? arrowUp : arrowDown;
+        const centerC = 8;
+        const centerR = 7;
+
+        dotMap.forEach(({ el, c, r }, key) => {
+          const dist = Math.hypot(c - centerC, r - centerR);
+          const delay = animateRipple ? Math.round(dist * 18) : 0;
+          el.style.transitionDelay = delay + 'ms';
+
+          if (activeArrow.has(key)) {
+            const cascadeDelay = animateRipple ? (inverted ? (10 - r) * 24 : (r - 4) * 24) : 0;
+            el.style.transitionDelay = cascadeDelay + 'ms';
+            el.setAttribute('fill', inverted ? '#4DA8FF' : '#FF5449');
+            el.setAttribute('opacity', '1');
+            el.setAttribute('r', '1.65');
+            if (inverted) {
+              el.classList.add('mint-bloom');
+              el.classList.remove('red-bloom');
+            } else {
+              el.classList.add('red-bloom');
+              el.classList.remove('mint-bloom');
+            }
+          } else if (bodyOutline.has(key)) {
+            el.setAttribute('fill', inverted ? '#E4FFF4' : '#52525B');
+            el.setAttribute('opacity', inverted ? '0.9' : '0.65');
+            el.setAttribute('r', '1.35');
+            el.classList.remove('mint-bloom', 'red-bloom');
+          } else if (seamDots.has(key)) {
+            el.setAttribute('fill', inverted ? '#4DA8FF' : '#3E3E44');
+            el.setAttribute('opacity', inverted ? '0.28' : '0.35');
+            el.setAttribute('r', '0.95');
+            el.classList.remove('mint-bloom', 'red-bloom');
+          } else {
+            el.setAttribute('fill', '#222228');
+            el.setAttribute('opacity', '0.45');
+            el.setAttribute('r', '0.8');
+            el.classList.remove('mint-bloom', 'red-bloom');
+          }
+
+          if (animateRipple) {
+            el.style.transform = 'scale(1.35)';
+            setTimeout(() => {
+              el.style.transform = 'scale(1)';
+            }, 130 + delay);
+          }
+        });
+      }
+
+      const toggleBtn = document.getElementById('invert-toggle');
+      const toggleLabel = document.getElementById('invert-label');
+      const toggleTrack = document.getElementById('invert-track');
+      const toggleThumb = document.getElementById('invert-thumb');
+      const statusLine = document.getElementById('status-line');
+
+      function updateToggleUI() {
+        toggleBtn.setAttribute('aria-checked', String(inverted));
+        if (inverted) {
+          toggleBtn.className = 'pill-glow-on w-auto min-w-[224px] flex items-center justify-between gap-gutter-md rounded-full bg-primary-container border border-primary px-gutter-md py-gutter-sm transition-colors duration-state-change ease-state-change focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary';
+          toggleLabel.className = 'font-label text-label-lg text-primary uppercase tracking-widest';
+          toggleTrack.className = 'inline-flex h-5 w-9 shrink-0 items-center rounded-full bg-primary p-0.5 transition-colors duration-state-change';
+          toggleThumb.className = 'h-4 w-4 rounded-full bg-on-primary translate-x-4 transition-transform duration-state-change ease-state-change';
+          statusLine.textContent = 'MOUSE: INVERTED · TRACKPAD: UNTOUCHED';
+          statusLine.className = 'font-label text-label-md text-primary text-center uppercase tracking-wider';
+        } else {
+          toggleBtn.className = 'pill-glow-off w-auto min-w-[224px] flex items-center justify-between gap-gutter-md rounded-full bg-surface-container border border-outline-variant px-gutter-md py-gutter-sm transition-colors duration-state-change ease-state-change focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline';
+          toggleLabel.className = 'font-label text-label-lg text-on-surface-variant uppercase tracking-widest';
+          toggleTrack.className = 'inline-flex h-5 w-9 shrink-0 items-center rounded-full bg-surface-container-highest p-0.5 transition-colors duration-state-change';
+          toggleThumb.className = 'h-4 w-4 rounded-full bg-on-surface-variant translate-x-0 transition-transform duration-state-change ease-state-change';
+          statusLine.textContent = 'MOUSE: STANDARD · TRACKPAD: UNTOUCHED';
+          statusLine.className = 'font-label text-label-md text-on-surface-variant text-center uppercase tracking-wider';
+        }
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        inverted = !inverted;
+        updateToggleUI();
+        renderMatrix(true);
+      });
+
+      document.querySelectorAll('[data-mini-switch]').forEach((sw) => {
+        sw.addEventListener('click', () => {
+          const on = sw.getAttribute('aria-checked') === 'true';
+          const next = !on;
+          sw.setAttribute('aria-checked', String(next));
+          const thumb = sw.firstElementChild;
+          if (next) {
+            sw.className = 'relative inline-flex h-4 w-7 shrink-0 items-center rounded-full bg-primary-container border border-primary p-0.5 transition-colors duration-state-change';
+            thumb.className = 'h-2.5 w-2.5 rounded-full bg-primary translate-x-3 transition-transform duration-state-change';
+          } else {
+            sw.className = 'relative inline-flex h-4 w-7 shrink-0 items-center rounded-full bg-surface-container-highest border border-outline-variant p-0.5 transition-colors duration-state-change';
+            thumb.className = 'h-2.5 w-2.5 rounded-full bg-on-surface-variant translate-x-0 transition-transform duration-state-change';
+          }
+        });
+      });
+
+      renderMatrix(false);
+    })();
+  </script>
+
+
+</body></html>
