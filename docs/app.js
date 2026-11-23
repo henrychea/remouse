@@ -104,24 +104,14 @@
     toggle.setAttribute("aria-checked", String(inverted));
     status.textContent = inverted ? "Mouse: inverted · Trackpad: untouched" : "Mouse: standard · Trackpad: untouched";
     status.classList.toggle("off", !inverted);
-    canvas.setAttribute("aria-label", `Dot-matrix mouse. Arrow points ${inverted ? "up: scroll inverted" : "down: scroll standard"}. Click or scroll here to flip.`);
+    canvas.setAttribute("aria-label", `Dot-matrix mouse with a ${inverted ? "blue arrow pointing up: wheel scrolling is inverted" : "red arrow pointing down: wheel scrolling is standard"}.`);
     if (reduce.matches) { draw(performance.now()); return; }
     const start = !ripple;
     ripple = { from: was, at: performance.now() };
     if (start) requestAnimationFrame(draw);
   }
 
-  let lastWheel = 0;
-  canvas.addEventListener("click", flip);
-  canvas.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); }
-  });
-  canvas.addEventListener("wheel", (e) => {
-    e.preventDefault();
-    const now = performance.now();
-    if (now - lastWheel > 700) flip();
-    lastWheel = now;
-  }, { passive: false });
+  canvas.addEventListener("click", () => toggle.click());
   toggle.addEventListener("click", flip);
   addEventListener("resize", () => { if (!ripple) draw(performance.now()); });
   draw(performance.now());
@@ -150,6 +140,4 @@
     }));
     el.appendChild(svg);
   });
-
-  if (reduce.matches) document.querySelectorAll("video").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
 })();

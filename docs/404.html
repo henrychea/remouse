@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404: page not found — re:Mouse</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" type="image/png" sizes="32x32" href="/remouse/assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/remouse/assets/icon-192.png">
+<link rel="stylesheet" href="/remouse/style.css">
+<style>
+  .notfound {
+    min-height: 70vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 8px; padding: 64px 16px;
+  }
+  .notfound .n { font-size: clamp(64px, 16vw, 160px); margin: 0; }
+  .notfound h1 { font-size: clamp(24px, 4vw, 38px); margin: 0 0 10px; }
+  .notfound p { color: var(--text-dim); margin: 0 0 22px; max-width: 34em; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <a class="brand" href="/remouse/" aria-label="re:Mouse home">
+    <img src="/remouse/assets/icon-192.png" alt="" width="28" height="28">
+    <span>re:Mouse</span>
+  </a>
+  <nav aria-label="Primary">
+    <a href="/remouse/#features">Features</a>
+    <a href="/remouse/#install">Install</a>
+    <a href="/remouse/#faq">FAQ</a>
+    <a href="https://github.com/henrychea/remouse">GitHub</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="notfound">
+    <p class="n" aria-hidden="true">404</p>
+    <h1>This page is not here.</h1>
+    <p>The link is old, or the page moved. re:Mouse itself is fine: one switch, wheel mice inverted, trackpad left alone.</p>
+    <a class="btn btn-primary" href="/remouse/">Back to the site</a>
+  </section>
+</main>
+
+<footer class="foot">
+  <span class="brand"><img src="/remouse/assets/icon-192.png" alt="" width="20" height="20"> re:Mouse</span>
+  <a href="https://github.com/henrychea/remouse">github.com/henrychea/remouse</a>
+  <span>MIT License</span>
+</footer>
+</body>
+</html>

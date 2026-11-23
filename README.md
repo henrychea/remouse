@@ -1,27 +1,29 @@
 <p align="center">
-  <img src="docs/assets/icon-256.png" width="128" height="128" alt="re:Mouse app icon">
+  <img src="docs/assets/icon-256.png" width="128" height="128" alt="re:Mouse app icon: a dot-matrix mouse with a blue arrow pointing up">
 </p>
 
-<h1 align="center">re:Mouse</h1>
+<h1 align="center">re:Mouse: invert mouse scroll on Mac, keep trackpad natural</h1>
 
-<p align="center"><strong>Invert your mouse wheel. Leave your trackpad alone.</strong></p>
+<p align="center">re:Mouse is a free macOS menu-bar app that reverses mouse-wheel scrolling while keeping trackpad and Magic Mouse gestures natural.</p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/macOS-13.1%2B-0A0A0A?style=flat-square&logo=apple&logoColor=F0F0F2" alt="macOS 13.1+">
+  <img src="https://img.shields.io/badge/macOS-13.1%2B-0A0A0A?style=flat-square&logo=apple&logoColor=F0F0F2" alt="Requires macOS 13.1 or later">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-4DA8FF?style=flat-square" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/Swift-5.0-FFB800?style=flat-square&logo=swift&logoColor=0A0A0A" alt="Swift 5.0">
   <img src="https://img.shields.io/badge/size-%3C%202%20MB-3E3E44?style=flat-square" alt="App size under 2 MB">
+  <a href="https://github.com/henrychea/remouse/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/henrychea/remouse/release.yml?style=flat-square" alt="Release workflow status"></a>
+  <a href="https://henrychea.github.io/remouse/"><img src="https://img.shields.io/github/actions/workflow/status/henrychea/remouse/pages.yml?style=flat-square&label=pages" alt="Pages site status"></a>
 </p>
 
 <p align="center">
-  <img src="docs/assets/demo.gif" width="720" alt="re:Mouse settings window with scroll inversion on and off">
+  <img src="docs/assets/demo.gif" width="720" alt="re:Mouse settings window: the INVERT SCROLL switch is on, the dot-matrix mouse shows a blue arrow pointing up, then the switch turns off and the arrow turns red and points down">
 </p>
 
-A tiny macOS menu-bar app that inverts scroll direction **for wheel mice only**. Trackpad and Magic Mouse scrolling is passed through untouched.
+It is the short answer to “natural scrolling on the trackpad but not the mouse”: wheel and trackpad directions are separate, so you can reverse mouse scroll on a Mac without flipping the setting for every device. Trackpad and Magic Mouse gestures pass through untouched, while a wheel mouse scrolls the classic way. If you have been looking for a [Scroll Reverser](https://pilotmoon.com/scrollreverser/) alternative that inverts scroll direction for the mouse only, this is the whole app.
 
 Pairs with "natural" scrolling turned on: trackpad gesture scrolling stays natural, and a traditional mouse wheel scrolls the way your hands expect.
 
-- Single 100 ms event tap, no polling, no background daemons, no third-party dependencies.
+- A single event tap, no background daemons, no third-party dependencies. Polling runs only while the app waits for Accessibility permission.
 - Built to be restyled: all UI lives in `reMouse/Views.swift`.
 
 [Website](https://henrychea.github.io/remouse/) · [Download](https://github.com/henrychea/remouse/releases/latest) · [How it works](#how-it-works) · [Conflicts](#conflicts)
@@ -32,25 +34,24 @@ Pairs with "natural" scrolling turned on: trackpad gesture scrolling stays natur
 
 There are several good scroll utilities. re:Mouse exists for the one job they bury under settings:
 
-|  | re:Mouse | LinearMouse | Scroll Reverser | Mac Mouse Fix |
+| | re:Mouse | Scroll Reverser | LinearMouse | Mac Mouse Fix |
 | --- | --- | --- | --- | --- |
-| Focus | wheel direction only | input remapping engine | direction for mouse + trackpad | buttons, gestures, scrolling |
-| Knobs | one switch | per-device rules, curves | direction toggles | extensive |
-| License | MIT | MIT | Apache-2.0 | source-available |
+| Focus | wheel direction only | direction for mouse and trackpad, per device | input remapping engine | buttons, gestures, smooth scrolling |
+| Separate mouse and trackpad direction | Yes | Yes | Yes | Yes |
+| Extra features | conflict check, menu-bar toggle | a direction setting for each device | per-device and per-app profiles, acceleration tuning, button remapping | button remapping, gestures, smooth scrolling |
+| License | MIT | Apache-2.0 | MIT | MMF 3: paid after trial, custom MMF License; MMF 2: free |
+| Price | Free | Free | Free | MMF 3: paid after trial; MMF 2: free |
 
-- **One switch.** No per-app rules, no acceleration curves, no profile editor. Toggle it in the menu bar; that is the whole configuration.
-- **Mouse only.** Wheel events invert, continuous events from trackpads and the Magic Mouse do not. Your trackpad never flips just because you fixed your mouse.
-- **No clutter.** Menu-bar toggle, one settings window, three checkboxes. Nothing else to learn.
-- **Yours.** MIT, under 2 MB, no dependencies, no telemetry. Restyle the whole UI in a single Swift file.
+Each rival's own site is the source: [Scroll Reverser](https://pilotmoon.com/scrollreverser/), [LinearMouse](https://linearmouse.app/en/), [Mac Mouse Fix](https://macmousefix.com/). Mac Mouse Fix price and license as of Nov 2026. re:Mouse is also the LinearMouse alternative for someone who wants only the wheel flipped: no device rules, no acceleration curves, no profile editor.
 
 ## Features
 
-- **Wheel-only inversion** — discrete wheel events are negated, continuous (trackpad / Magic Mouse) events pass through untouched.
-- **One event tap** — installed on the session at 100 ms, callback is allocation-free, and the tap re-enables itself if macOS disables it.
+- **Wheel-only inversion** — discrete wheel events are negated; continuous events (trackpad, Magic Mouse, some smooth-scroll mice) pass through untouched.
+- **One event tap** — installed on the session, callback is allocation-free, and the tap re-enables itself if macOS disables it.
 - **Menu-bar toggle** — flip inversion from the menu without opening a window.
 - **Small settings window** — invert on/off, show menu-bar icon, show in Dock, launch at login ([`SMAppService`](https://developer.apple.com/documentation/servicemanagement/smappservice)).
 - **Conflict check** — finds the known scroll inverters and offers a Quit button for each.
-- **No sandbox, no helper** — the App Sandbox forbids modifying event taps for other apps, so this app ships outside it on purpose.
+- **No sandbox, no helper** — in our tested implementation the App Sandbox refused a scroll-modifying event tap ([spike result](docs/notes/sandbox-spike.md)), so this app ships outside it on purpose.
 - **Restylable** — every view lives in `reMouse/Views.swift`; the dot-matrix glyphs live in `reMouse/DotMatrix.swift`.
 
 ## Install
@@ -59,9 +60,11 @@ Free, MIT, macOS 13.1 or later.
 
 ### Download
 
-**[Download re:Mouse →](https://github.com/henrychea/remouse/releases/latest)** — unzip and move `reMouse.app` to `/Applications`.
+**[Download re:Mouse →](https://github.com/henrychea/remouse/releases/latest)** — open the DMG and drag **re:Mouse** onto the Applications folder.
 
-The release is ad-hoc signed rather than notarized, so the first launch needs one extra step: right-click the app → **Open**, or clear the quarantine flag:
+The release is ad-hoc signed, not notarized, so the first launch needs one extra step. Since macOS 15 there is no right-click → **Open** shortcut: launch it once, then open **System Settings → Privacy & Security** and click **Open Anyway** next to re:Mouse.
+
+Advanced: clear the quarantine flag instead, which skips the prompt.
 
 ```sh
 xattr -dr com.apple.quarantine /Applications/reMouse.app
@@ -84,11 +87,7 @@ Select the `reMouse` scheme and run, or from the command line:
 xcodebuild -scheme reMouse -configuration Debug build
 ```
 
-The source build is ad-hoc signed (`CODE_SIGN_IDENTITY = "-"`, empty `DEVELOPMENT_TEAM`), so if you move it to another Mac, macOS quarantines it. Right-click the app → **Open** the first time, or:
-
-```sh
-xattr -d com.apple.quarantine /Applications/reMouse.app
-```
+The source build is ad-hoc signed (`CODE_SIGN_IDENTITY = "-"`, empty `DEVELOPMENT_TEAM`), so if you move it to another Mac, macOS quarantines it. Launch it once and approve it in **System Settings → Privacy & Security → Open Anyway**. Advanced: `xattr -dr com.apple.quarantine /Applications/reMouse.app`
 
 On first launch the app asks for **Accessibility** permission. The event tap can only be installed after that is granted (System Settings → Privacy & Security → Accessibility). Until then the app keeps polling and installs the tap as soon as the checkbox is ticked.
 
@@ -99,6 +98,18 @@ The invert rule is a pure function in `reMouse/ScrollInverter.swift`, covered by
 ```sh
 ./check.sh
 ```
+
+### Releasing
+
+Tag a version and push the tag. [`.github/workflows/release.yml`](.github/workflows/release.yml) then builds the DMG on macOS 15, checksums it, and attaches both files to the GitHub Release:
+
+```sh
+git tag v1.0.0 && git push origin v1.0.0
+```
+
+The tag sets the version: `v1.1.2` becomes `CFBundleShortVersionString` `1.1.2`, and `CFBundleVersion` is the workflow run number. No secrets are needed, because the app is ad-hoc signed, not notarized. Running the workflow by hand builds the DMG as a workflow artifact and creates no release.
+
+The same build runs locally: `VERSION=1.0.1 BUILD=7 scripts/make-dmg.sh` writes `build/re-Mouse-1.0.1.dmg`.
 
 ## How it works
 
@@ -142,11 +153,11 @@ Only one tool should rewrite scroll events. At launch, and whenever inversion is
 
 ## Why not on the App Store?
 
-The App Sandbox forbids an event tap that modifies other apps' input, so a sandboxed build could only listen and never invert — see [the spike result](docs/notes/sandbox-spike.md).
+In our tested implementation, the App Sandbox refused an event tap that modifies input: a sandboxed build could only listen and never invert — see [the spike result](docs/notes/sandbox-spike.md).
 
 ## Credits
 
-Approach informed by [LinearMouse](https://github.com/linearmouse/linearmouse) (MIT) and [Scroll Reverser](https://github.com/pilotmoon/Scroll-Reverser) (Apache-2.0). No code from Mac Mouse Fix is used — its license forbids it.
+Approach informed by [LinearMouse](https://github.com/linearmouse/linearmouse) (MIT) and [Scroll Reverser](https://github.com/pilotmoon/Scroll-Reverser) (Apache-2.0). No code from Mac Mouse Fix is used.
 
 ## License
 

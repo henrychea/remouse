@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - name: Checkout (actions/checkout v5.1.0)
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+
+      - name: Select Xcode 16.4
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version="0.0.0"
+          fi
+          echo "value=${version}" >> "$GITHUB_OUTPUT"
+          artifact="re-Mouse-${version}-${GITHUB_RUN_NUMBER}"
+          echo "artifact=${artifact}" >> "$GITHUB_OUTPUT"
+
+      - name: Check
+        run: ./check.sh
+
+      - name: Build DMG
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          BUILD: ${{ github.run_number }}
+        run: scripts/make-dmg.sh
+
+      - name: Checksum
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          cd build
+          dmg="re-Mouse-${VERSION}.dmg"
+          shasum -a 256 "$dmg" > "$dmg.sha256"
+
+      - name: Upload artifact (actions/upload-artifact v5.0.0)
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: ${{ steps.version.outputs.artifact }}
+          path: |
+            build/re-Mouse-${{ steps.version.outputs.value }}.dmg
+            build/re-Mouse-${{ steps.version.outputs.value }}.dmg.sha256
+          if-no-files-found: error
+
+      - name: Publish release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          dmg="build/re-Mouse-${VERSION}.dmg"
+          sum="${dmg}.sha256"
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$dmg" "$sum" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$dmg" "$sum" \
+              --title "re:Mouse $VERSION" --generate-notes
+          fi
