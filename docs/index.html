@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reverse Mouse Scroll on Mac | re:Mouse</title>
-<meta name="description" content="Reverse your mouse wheel on Mac while keeping trackpad and Magic Mouse scrolling natural. Free, open source, and built for macOS 13.1+.">
+<meta name="description" content="Reverse your mouse wheel on Mac while keeping trackpad and Magic Mouse scrolling natural, with smooth scroll and ⌘ + wheel zoom. Free, open source, and built for macOS 13.1+.">
 <link rel="canonical" href="https://henrychea.github.io/remouse/">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#0A0A0A">
@@ -12,14 +12,14 @@
 <meta property="og:site_name" content="re:Mouse">
 <meta property="og:url" content="https://henrychea.github.io/remouse/">
 <meta property="og:title" content="Reverse Mouse Scroll on Mac | re:Mouse">
-<meta property="og:description" content="Reverse your mouse wheel on Mac while keeping trackpad and Magic Mouse scrolling natural. Free, open source, and built for macOS 13.1+.">
+<meta property="og:description" content="Reverse your mouse wheel on Mac while keeping trackpad and Magic Mouse scrolling natural, with smooth scroll and ⌘ + wheel zoom. Free, open source, and built for macOS 13.1+.">
 <meta property="og:image" content="https://henrychea.github.io/remouse/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="re:Mouse app icon beside the re:Mouse wordmark, the line invert your mouse wheel, leave your trackpad alone, and macOS 13.1+ · MIT · open source">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Reverse Mouse Scroll on Mac | re:Mouse">
-<meta name="twitter:description" content="Reverse your mouse wheel on Mac while keeping trackpad and Magic Mouse scrolling natural. Free, open source, and built for macOS 13.1+.">
+<meta name="twitter:description" content="Reverse your mouse wheel on Mac while keeping trackpad and Magic Mouse scrolling natural, with smooth scroll and ⌘ + wheel zoom. Free, open source, and built for macOS 13.1+.">
 <meta name="twitter:image" content="https://henrychea.github.io/remouse/assets/og.png">
 <meta name="twitter:image:alt" content="re:Mouse app icon beside the re:Mouse wordmark, the line invert your mouse wheel, leave your trackpad alone, and macOS 13.1+ · MIT · open source">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
@@ -32,10 +32,10 @@
   "@type": "SoftwareApplication",
   "name": "re:Mouse",
   "url": "https://henrychea.github.io/remouse/",
-  "description": "A free, open-source macOS menu-bar app that inverts mouse wheel scrolling and leaves trackpad and Magic Mouse gestures on natural scrolling.",
+  "description": "A free, open-source macOS menu-bar app that inverts mouse wheel scrolling and leaves trackpad and Magic Mouse gestures on natural scrolling. It also adds smooth scroll, per-app exclusion and ⌘ + wheel zoom.",
   "operatingSystem": "macOS 13.1+",
   "applicationCategory": "UtilitiesApplication",
-  "softwareVersion": "1.0.0",
+  "softwareVersion": "1.1.0",
   "license": "https://opensource.org/licenses/MIT",
   "downloadUrl": "https://github.com/henrychea/remouse/releases/latest",
   "image": "https://henrychea.github.io/remouse/assets/og.png",
@@ -101,7 +101,10 @@
     <h2 id="features-title">Mouse-only scroll reversal</h2>
     <ul class="grid features">
       <li><span class="dot-icon" data-glyph="wheel"></span><h3>Wheel only</h3><p>Discrete wheel events are inverted. Continuous events (trackpad, Magic Mouse, some smooth-scroll mice) pass through untouched.</p></li>
-      <li><span class="dot-icon" data-glyph="switch"></span><h3>One switch</h3><p>No per-app rules, no acceleration curves, no button remapping. On or off.</p></li>
+      <li><span class="dot-icon" data-glyph="switch"></span><h3>Few switches</h3><p>Invert, smooth scroll and ⌘ zoom, each on or off. Still no acceleration curves and no button remapping.</p></li>
+      <li><span class="dot-icon" data-glyph="wave"></span><h3>Smooth scroll</h3><p>Each wheel notch becomes a short eased glide. The trackpad stays untouched, and Shift + wheel still scrolls sideways.</p></li>
+      <li><span class="dot-icon" data-glyph="block"></span><h3>Per-app exclusion</h3><p>Turn smooth scroll off for apps with their own scroll engine, such as Moonlight. Invert and zoom still apply.</p></li>
+      <li><span class="dot-icon" data-glyph="zoom"></span><h3>⌘ + wheel zoom</h3><p>Hold Command and turn the wheel to zoom. It sends ⌘= or ⌘−, one per notch.</p></li>
       <li><span class="dot-icon" data-glyph="bolt"></span><h3>Light</h3><p>A single event tap, no helper daemons, no third-party dependencies. Polling runs only while it waits for Accessibility permission.</p></li>
       <li><span class="dot-icon" data-glyph="warn"></span><h3>Conflict check</h3><p>Finds other scroll tools that would double-invert and offers to quit them.</p></li>
       <li><span class="dot-icon" data-glyph="lock"></span><h3>Private</h3><p>No network access, no analytics, no data stored beyond your settings.</p></li>
@@ -147,6 +150,7 @@
       <li><span class="n">01</span><p>A head-insert event tap listens for scroll events in your session.</p></li>
       <li><span class="n">02</span><p>Trackpads, the Magic Mouse and some smooth-scroll mice send <em>continuous</em> events. Those return untouched.</p></li>
       <li><span class="n">03</span><p>Wheel mice send <em>discrete</em> events. Their deltas are negated, then passed on.</p></li>
+      <li><span class="n">04</span><p>With smooth scroll on, wheel deltas are replayed as small pixel events. ⌘ + wheel becomes ⌘= or ⌘−.</p></li>
     </ol>
     <p class="note">macOS calls the setting Natural scrolling, and it applies to every pointing device at once: turn it on and your wheel mouse scrolls backwards too. re:Mouse separates the two, so you get natural scrolling on the trackpad but not the mouse, and the wheel keeps the direction your hands expect.</p>
   </section>
@@ -167,10 +171,11 @@
     <div class="faq">
       <details><summary>Is it free?</summary><p>Yes. MIT licensed, free to download, use and modify. Builds from source with Xcode 15 or later.</p></details>
       <details><summary>Why not on the App Store?</summary><p>In our tested sandboxed build, the App Sandbox refused the event tap that changes scroll events: it could only observe them, never invert them (<a href="https://github.com/henrychea/remouse/blob/main/docs/notes/sandbox-spike.md">spike result</a>). So re:Mouse ships as a free download outside the App Store.</p></details>
-      <details><summary>Why not LinearMouse, Scroll Reverser or Mac Mouse Fix?</summary><p>They are good tools with more options. re:Mouse is a small Scroll Reverser alternative and a LinearMouse alternative for people who want one switch and nothing else.</p></details>
+      <details><summary>Why not LinearMouse, Scroll Reverser or Mac Mouse Fix?</summary><p>They are good tools with more options. re:Mouse is a small Scroll Reverser alternative and a LinearMouse alternative for people who want a few switches, smooth scroll and ⌘ zoom without the rest.</p></details>
       <details><summary>Does it change my trackpad?</summary><p>No. Trackpad and Magic Mouse events are continuous, and re:Mouse passes them through unchanged. Keep "Natural scrolling" on in System Settings.</p></details>
+      <details><summary>Does smooth scroll work in every app?</summary><p>Yes by default. If an app has its own scroll engine, use EXCLUDE… next to the Smooth scroll switch to turn smoothing off there.</p></details>
       <details><summary>macOS will not open the app. Is it broken?</summary><p>No. The build is ad-hoc signed, not notarized, and since macOS 15 there is no right-click → Open shortcut. Launch it once, then approve it in System Settings → Privacy &amp; Security → Open Anyway. Advanced: clear the quarantine flag with <code>xattr -dr com.apple.quarantine /Applications/reMouse.app</code>.</p></details>
-      <details><summary>Why does it need Accessibility permission?</summary><p>macOS only lets apps with Accessibility access install an event tap that can modify input. Grant it in System Settings → Privacy &amp; Security → Accessibility.</p></details>
+      <details><summary>Why does it need Accessibility permission?</summary><p>macOS only lets apps with Accessibility access install an event tap that can modify input. Grant it in System Settings → Privacy &amp; Security → Accessibility. After an update, macOS can ask again. If scrolling stops, remove re:Mouse from the list and add it again.</p></details>
       <details><summary>Does it collect any data?</summary><p>No. It makes no network connections and stores only its own settings.</p></details>
       <details><summary>How do I uninstall it?</summary><p>Quit from the menu bar, delete reMouse.app from Applications, and remove it from the Accessibility list.</p></details>
     </div>
