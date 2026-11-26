@@ -36,9 +36,9 @@ There are several good scroll utilities. re:Mouse exists for the one job they bu
 
 | | re:Mouse | Scroll Reverser | LinearMouse | Mac Mouse Fix |
 | --- | --- | --- | --- | --- |
-| Focus | wheel direction only | direction for mouse and trackpad, per device | input remapping engine | buttons, gestures, smooth scrolling |
+| Focus | wheel direction, smooth scroll, ⌘ zoom | direction for mouse and trackpad, per device | input remapping engine | buttons, gestures, smooth scrolling |
 | Separate mouse and trackpad direction | Yes | Yes | Yes | Yes |
-| Extra features | conflict check, menu-bar toggle | a direction setting for each device | per-device and per-app profiles, acceleration tuning, button remapping | button remapping, gestures, smooth scrolling |
+| Extra features | smooth scroll with per-app exclusion, ⌘ + wheel zoom, conflict check, menu-bar toggle | a direction setting for each device | per-device and per-app profiles, acceleration tuning, button remapping | button remapping, gestures, smooth scrolling |
 | License | MIT | Apache-2.0 | MIT | MMF 3: paid after trial, custom MMF License; MMF 2: free |
 | Price | Free | Free | Free | MMF 3: paid after trial; MMF 2: free |
 
@@ -47,9 +47,12 @@ Each rival's own site is the source: [Scroll Reverser](https://pilotmoon.com/scr
 ## Features
 
 - **Wheel-only inversion** — discrete wheel events are negated; continuous events (trackpad, Magic Mouse, some smooth-scroll mice) pass through untouched.
+- **Smooth scroll** — each wheel notch becomes an eased pixel glide instead of a line jump; trackpad input stays untouched, Shift + wheel still scrolls sideways, and an on/off switch lives in the settings window.
+- **Per-app exclusion** — turn smooth scroll off for apps with their own scroll engine, such as Moonlight. Invert and zoom still apply there.
+- **⌘ + wheel zoom** — hold Command and scroll to send ⌘= or ⌘−, one per notch; it follows the invert direction and has its own on/off switch.
 - **One event tap** — installed on the session, callback is allocation-free, and the tap re-enables itself if macOS disables it.
 - **Menu-bar toggle** — flip inversion from the menu without opening a window.
-- **Small settings window** — invert on/off, show menu-bar icon, show in Dock, launch at login ([`SMAppService`](https://developer.apple.com/documentation/servicemanagement/smappservice)).
+- **Small settings window** — invert on/off, smooth scroll on/off, ⌘ + scroll zoom on/off, per-app exclusions, show menu-bar icon, show in Dock, launch at login ([`SMAppService`](https://developer.apple.com/documentation/servicemanagement/smappservice)).
 - **Conflict check** — finds the known scroll inverters and offers a Quit button for each.
 - **No sandbox, no helper** — in our tested implementation the App Sandbox refused a scroll-modifying event tap ([spike result](docs/notes/sandbox-spike.md)), so this app ships outside it on purpose.
 - **Restylable** — every view lives in `reMouse/Views.swift`; the dot-matrix glyphs live in `reMouse/DotMatrix.swift`.
@@ -101,10 +104,10 @@ The invert rule is a pure function in `reMouse/ScrollInverter.swift`, covered by
 
 ### Releasing
 
-Tag a version and push the tag. [`.github/workflows/release.yml`](.github/workflows/release.yml) then builds the DMG on macOS 15, checksums it, and attaches both files to the GitHub Release:
+Tag a version and push the tag. [`.github/workflows/release.yml`](.github/workflows/release.yml) then builds the DMG on macOS 15, checksums it, and attaches both files to the GitHub Release. Release notes come from the annotated tag message, so each release can say what changed for users:
 
 ```sh
-git tag v1.0.0 && git push origin v1.0.0
+git tag -a v1.1.0 -F notes.txt && git push origin v1.1.0
 ```
 
 The tag sets the version: `v1.1.2` becomes `CFBundleShortVersionString` `1.1.2`, and `CFBundleVersion` is the workflow run number. No secrets are needed, because the app is ad-hoc signed, not notarized. Running the workflow by hand builds the DMG as a workflow artifact and creates no release.
@@ -115,7 +118,9 @@ The same build runs locally: `VERSION=1.0.1 BUILD=7 scripts/make-dmg.sh` writes 
 
 A head-insert `CGEventTap` on `kCGSessionEventTap` masks `scrollWheel`. Wheel events (`kCGScrollWheelEventIsContinuous == 0`) get `DeltaAxis1/2`, `PointDeltaAxis1/2` and `FixedPtDeltaAxis1/2` negated. Continuous events — trackpads and the Magic Mouse — return untouched. The callback is allocation-free, and the tap re-enables itself on `kCGEventTapDisabledByTimeout` / `kCGEventTapDisabledByUserInput`.
 
-That is the whole mechanism: no device matching, no per-app rules, no daemon.
+Smooth scroll and zoom reuse that tap. When smooth scroll is on, a discrete notch is dropped and added to a pending pixel target; a 120 Hz main-run-loop timer replays it as short `.pixel` events marked with `eventSourceUserData`, so the tap skips its own output. Each tick emits a fraction of what remains, fast spins carry further, and the timer stops below one pixel. The cached frontmost app is checked against the exclusion list first, so excluded apps get the plain event. Command + wheel posts `Cmd+=` or `Cmd+-` key events, one per notch, after the invert rule.
+
+There is still no device matching and no daemon.
 
 ## Conflicts
 

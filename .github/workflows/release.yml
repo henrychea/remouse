@@ -70,5 +70,5 @@ jobs:
             gh release upload "$GITHUB_REF_NAME" "$dmg" "$sum" --clobber
           else
             gh release create "$GITHUB_REF_NAME" "$dmg" "$sum" \
-              --title "re:Mouse $VERSION" --generate-notes
+              --title "re:Mouse $VERSION" --notes-from-tag
           fi
