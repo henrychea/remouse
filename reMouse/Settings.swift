@@ -8,6 +8,9 @@ enum SettingsKeys {
     static let showMenuBarIcon = "showMenuBarIcon"
     static let showInDock = "showInDock"
     static let launchAtLogin = "launchAtLogin"
+    static let smoothScroll = "smoothScroll"
+    static let commandZoom = "commandZoom"
+    static let smoothScrollExcluded = "smoothScrollExcluded"
 }
 
 enum LoginItem {
@@ -40,6 +43,45 @@ enum InvertState {
         if enabled {
             ConflictStore.shared.refresh()
         }
+    }
+}
+
+@MainActor
+enum SmoothState {
+    static func apply(_ enabled: Bool) {
+        ScrollTap.shared.isSmoothEnabled = enabled
+        if !enabled {
+            SmoothScroll.shared.stop()
+        }
+    }
+
+    static func applyExcluded(_ bundleIDs: [String]) {
+        ScrollTap.shared.smoothExcludedBundleIDs = Set(bundleIDs)
+        SmoothScroll.shared.stop()
+    }
+}
+
+@MainActor
+enum ZoomState {
+    static func apply(_ enabled: Bool) {
+        ScrollTap.shared.isCommandZoomEnabled = enabled
+    }
+}
+
+enum FrontmostApp {
+    static func start() {
+        update(NSWorkspace.shared.frontmostApplication)
+        NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didActivateApplicationNotification,
+            object: nil,
+            queue: .main
+        ) { notification in
+            update(notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)
+        }
+    }
+
+    private static func update(_ app: NSRunningApplication?) {
+        ScrollTap.shared.setFrontmost(app?.bundleIdentifier)
     }
 }
 

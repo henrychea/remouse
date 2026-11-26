@@ -1,5 +1,6 @@
 import AppKit
 import SwiftUI
+import UniformTypeIdentifiers
 
 extension Color {
     init(hex: UInt32, alpha: Double = 1) {
@@ -132,7 +133,7 @@ struct Scanline: View {
 private struct WindowFrame: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .frame(width: 360, height: 420)
+            .frame(width: 360, height: 440)
             .clipShape(RoundedRectangle(cornerRadius: Radius.large, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: Radius.large, style: .continuous)
@@ -150,11 +151,15 @@ struct MainWindowView: View {
     @AppStorage(SettingsKeys.showMenuBarIcon) private var showMenuBarIcon = true
     @AppStorage(SettingsKeys.showInDock) private var showInDock = false
     @AppStorage(SettingsKeys.launchAtLogin) private var launchAtLogin = false
+    @AppStorage(SettingsKeys.smoothScroll) private var smoothScroll = true
+    @AppStorage(SettingsKeys.commandZoom) private var commandZoom = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var ripple: DotMatrix.Ripple?
     @State private var dismissed: Set<String> = []
     @State private var bannerExpanded = true
+    @State private var excludedApps: [String] = UserDefaults.standard.stringArray(forKey: SettingsKeys.smoothScrollExcluded) ?? []
+    @State private var showExclusions = false
 
     private var visibleConflicts: [Conflict] {
         conflicts.filter { !dismissed.contains($0.name) }
@@ -282,17 +287,23 @@ struct MainWindowView: View {
     }
 
     private var footer: some View {
-        HStack(alignment: .bottom, spacing: Gap.sm) {
-            VStack(alignment: .leading, spacing: Gap.xs) {
-                HStack(spacing: Gap.md) {
-                    switchRow("Show in menu bar", isOn: $showMenuBarIcon)
-                    switchRow("Show in Dock", isOn: dockBinding)
+        Grid(alignment: .leading, horizontalSpacing: Gap.md, verticalSpacing: Gap.xs) {
+            GridRow {
+                switchRow("Show in menu bar", isOn: $showMenuBarIcon)
+                switchRow("Show in Dock", isOn: dockBinding)
+            }
+            GridRow {
+                HStack(spacing: Gap.xs) {
+                    switchRow("Smooth scroll", isOn: smoothBinding)
+                    excludeButton
                 }
+                switchRow("⌘ + scroll zoom", isOn: zoomBinding)
+            }
+            GridRow {
                 switchRow("Launch at login", isOn: loginBinding)
             }
-            Spacer(minLength: 0)
-            quitPill
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, Gap.md)
         .padding(.vertical, Gap.sm)
         .background(Palette.surfaceLow)
@@ -341,7 +352,7 @@ struct MainWindowView: View {
     }
 
     private var strip: some View {
-        HStack(spacing: Gap.sm) {
+        HStack(spacing: Gap.xs) {
             Button {
                 if let url = URL(string: "https://github.com/henrychea/reMouse") {
                     NSWorkspace.shared.open(url)
@@ -360,6 +371,8 @@ struct MainWindowView: View {
             .accessibilityLabel("Open the re:Mouse GitHub repository")
 
             Spacer(minLength: 0)
+
+            quitPill
 
             Text("MIT")
                 .font(Typo.labelSmall())
@@ -434,6 +447,54 @@ struct MainWindowView: View {
             get: { launchAtLogin },
             set: { launchAtLogin = $0; LoginItem.set($0) }
         )
+    }
+
+    private var smoothBinding: Binding<Bool> {
+        Binding(
+            get: { smoothScroll },
+            set: { smoothScroll = $0; SmoothState.apply($0) }
+        )
+    }
+
+    private var zoomBinding: Binding<Bool> {
+        Binding(
+            get: { commandZoom },
+            set: { commandZoom = $0; ZoomState.apply($0) }
+        )
+    }
+
+    private var excludedBinding: Binding<[String]> {
+        Binding(
+            get: { excludedApps },
+            set: {
+                excludedApps = $0
+                UserDefaults.standard.set($0, forKey: SettingsKeys.smoothScrollExcluded)
+                SmoothState.applyExcluded($0)
+            }
+        )
+    }
+
+    private var excludeButton: some View {
+        Button {
+            showExclusions.toggle()
+        } label: {
+            Text("EXCLUDE…")
+                .font(Typo.labelSmall())
+                .tracking(1)
+                .foregroundStyle(Palette.primary)
+                .lineLimit(1)
+                .fixedSize()
+                .padding(.horizontal, Gap.sm)
+                .padding(.vertical, 2)
+                .background(Capsule().fill(Palette.surfaceContainer))
+                .overlay(Capsule().strokeBorder(Palette.outlineVariant, lineWidth: 1))
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Exclude apps from smooth scrolling")
+        .popover(isPresented: $showExclusions, arrowEdge: .bottom) {
+            SmoothExclusionsView(bundleIDs: excludedBinding)
+        }
     }
 
     private func toggleInvert() {
@@ -701,6 +762,103 @@ struct MenuDropdownView: View {
     }
 }
 
+private struct SmoothExclusionsView: View {
+    @Binding var bundleIDs: [String]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Gap.sm) {
+            Text("SMOOTH SCROLL EXCLUSIONS")
+                .font(Typo.labelSmall())
+                .tracking(1.2)
+                .foregroundStyle(Palette.onSurfaceVariant)
+
+            if bundleIDs.isEmpty {
+                Text("NO EXCLUSIONS")
+                    .font(Typo.caption())
+                    .foregroundStyle(Palette.onSurfaceVariant)
+                    .padding(.vertical, Gap.xs)
+            } else {
+                ScrollView {
+                    VStack(spacing: Gap.xs) {
+                        ForEach(bundleIDs, id: \.self) { bundleID in
+                            row(bundleID)
+                        }
+                    }
+                }
+                .frame(maxHeight: 180)
+            }
+
+            Button(action: addApps) {
+                Text("ADD APP")
+                    .font(Typo.labelSmall())
+                    .tracking(1.2)
+                    .foregroundStyle(Palette.onPrimary)
+                    .padding(.horizontal, Gap.md)
+                    .padding(.vertical, Gap.xs)
+                    .background(Capsule().fill(Palette.primary))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(Gap.md)
+        .frame(width: 260)
+        .background(Palette.surface)
+        .preferredColorScheme(.dark)
+    }
+
+    private func row(_ bundleID: String) -> some View {
+        HStack(spacing: Gap.sm) {
+            if let icon = appIcon(bundleID) {
+                Image(nsImage: icon)
+                    .resizable()
+                    .frame(width: 16, height: 16)
+            }
+            Text(appName(bundleID))
+                .font(Typo.caption())
+                .foregroundStyle(Palette.onSurface)
+                .lineLimit(1)
+            Spacer(minLength: 0)
+            Button {
+                bundleIDs.removeAll { $0 == bundleID }
+            } label: {
+                Text("×")
+                    .font(Typo.labelMedium())
+                    .foregroundStyle(Palette.error)
+                    .frame(width: 16, height: 16)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Remove \(appName(bundleID))")
+        }
+    }
+
+    private func addApps() {
+        let panel = NSOpenPanel()
+        panel.directoryURL = URL(fileURLWithPath: "/Applications")
+        panel.allowedContentTypes = [.application]
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = false
+        guard panel.runModal() == .OK else { return }
+        for url in panel.urls {
+            guard let bundleID = Bundle(url: url)?.bundleIdentifier, !bundleIDs.contains(bundleID) else { continue }
+            bundleIDs.append(bundleID)
+        }
+    }
+
+    private func appURL(_ bundleID: String) -> URL? {
+        NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleID)
+    }
+
+    private func appName(_ bundleID: String) -> String {
+        guard let url = appURL(bundleID) else { return bundleID }
+        return FileManager.default.displayName(atPath: url.path)
+    }
+
+    private func appIcon(_ bundleID: String) -> NSImage? {
+        guard let url = appURL(bundleID) else { return nil }
+        return NSWorkspace.shared.icon(forFile: url.path)
+    }
+}
+
 struct MainWindowHost: View {
     @ObservedObject private var conflicts = ConflictStore.shared
     @State private var permission = PermissionState.current
@@ -743,7 +901,7 @@ enum MainWindow {
     static func show() {
         if window == nil {
             let window = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: 360, height: 420),
+                contentRect: NSRect(x: 0, y: 0, width: 360, height: 440),
                 styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
                 backing: .buffered,
                 defer: false
@@ -755,8 +913,8 @@ enum MainWindow {
             window.isMovableByWindowBackground = true
             window.backgroundColor = Palette.surface.ink
             window.appearance = NSAppearance(named: .darkAqua)
-            window.contentMinSize = NSSize(width: 360, height: 420)
-            window.contentMaxSize = NSSize(width: 360, height: 420)
+            window.contentMinSize = NSSize(width: 360, height: 440)
+            window.contentMaxSize = NSSize(width: 360, height: 440)
             window.isReleasedWhenClosed = false
             window.center()
             Self.window = window

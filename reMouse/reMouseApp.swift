@@ -27,6 +27,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let defaults = UserDefaults.standard
         DockVisibility.apply(defaults.bool(forKey: SettingsKeys.showInDock))
         ScrollTap.shared.isEnabled = defaults.object(forKey: SettingsKeys.invertEnabled) as? Bool ?? true
+        ScrollTap.shared.isSmoothEnabled = defaults.object(forKey: SettingsKeys.smoothScroll) as? Bool ?? true
+        ScrollTap.shared.isCommandZoomEnabled = defaults.object(forKey: SettingsKeys.commandZoom) as? Bool ?? true
+        ScrollTap.shared.smoothExcludedBundleIDs = Set(defaults.stringArray(forKey: SettingsKeys.smoothScrollExcluded) ?? [])
+        FrontmostApp.start()
         ConflictStore.shared.refresh()
 
         startTapFlow()
