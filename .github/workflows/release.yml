@@ -64,6 +64,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.value }}
         run: |
+          git fetch --force --depth=1 origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
           dmg="build/re-Mouse-${VERSION}.dmg"
           sum="${dmg}.sha256"
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
