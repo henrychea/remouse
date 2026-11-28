@@ -90,6 +90,10 @@ final class ScrollTap {
             fixed2: event.getDoubleValueField(.scrollWheelEventFixedPtDeltaAxis2)
         )
         let flipped = invertedDeltas(original, isContinuous: false, enabled: ScrollTap.enabled)
+        let hasModifier = !event.flags.isDisjoint(with: SmoothScroll.bypassModifiers)
+        if hasModifier {
+            SmoothScroll.shared.stop()
+        }
 
         if ScrollTap.zoom, event.flags.contains(.maskCommand) {
             let direction = zoomDirection(flipped)
@@ -102,7 +106,8 @@ final class ScrollTap {
         if shouldSmooth(
             bundleID: ScrollTap.frontmostBundleID,
             excluded: ScrollTap.excludedBundleIDs,
-            enabled: ScrollTap.smooth
+            enabled: ScrollTap.smooth,
+            hasModifier: hasModifier
         ) {
             let pixels = shiftingVerticalToHorizontal(
                 pixelsForNotches(flipped),

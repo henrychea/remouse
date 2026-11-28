@@ -41,6 +41,8 @@ precondition(shouldSmooth(bundleID: "com.x", excluded: ["com.x"], enabled: true)
 precondition(shouldSmooth(bundleID: "com.x", excluded: ["com.y"], enabled: true) == true, "other app is smoothed")
 precondition(shouldSmooth(bundleID: "com.x", excluded: [], enabled: false) == false, "disabled smooth is off")
 precondition(shouldSmooth(bundleID: nil, excluded: ["com.x"], enabled: true) == true, "unknown app is smoothed")
+precondition(shouldSmooth(bundleID: "com.x", excluded: [], enabled: true, hasModifier: true) == false, "modifier bypasses smooth scroll")
+precondition(shouldSmooth(bundleID: "com.x", excluded: [], enabled: true, hasModifier: false) == true, "no modifier allows smooth scroll")
 
 print("scroll logic ok")
 EOF

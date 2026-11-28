@@ -58,8 +58,8 @@ func zoomDirection(_ deltas: ScrollDeltas) -> Int {
     return 0
 }
 
-func shouldSmooth(bundleID: String?, excluded: Set<String>, enabled: Bool) -> Bool {
-    guard enabled else { return false }
+func shouldSmooth(bundleID: String?, excluded: Set<String>, enabled: Bool, hasModifier: Bool = false) -> Bool {
+    guard enabled, !hasModifier else { return false }
     guard let bundleID = bundleID else { return true }
     return !excluded.contains(bundleID)
 }

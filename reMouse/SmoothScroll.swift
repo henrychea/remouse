@@ -4,6 +4,8 @@ import CoreGraphics
 final class SmoothScroll {
     static let shared = SmoothScroll()
     static let userData: Int64 = 0x524D_5343
+    static let bypassModifiers: CGEventFlags = [.maskCommand, .maskControl, .maskAlternate]
+    private static let modifierMask: CGEventFlags = [.maskShift, .maskCommand, .maskControl, .maskAlternate]
 
     private let source = CGEventSource(stateID: .hidSystemState)
     private var timer: Timer?
@@ -13,6 +15,9 @@ final class SmoothScroll {
     private init() {}
 
     func add(_ pixels: ScrollPixels, flags: CGEventFlags) {
+        if flags.intersection(Self.modifierMask) != self.flags.intersection(Self.modifierMask) {
+            remaining = ScrollPixels(axis1: 0, axis2: 0)
+        }
         remaining.axis1 += pixels.axis1
         remaining.axis2 += pixels.axis2
         self.flags = flags
@@ -29,9 +34,14 @@ final class SmoothScroll {
         timer?.invalidate()
         timer = nil
         remaining = ScrollPixels(axis1: 0, axis2: 0)
+        flags = []
     }
 
     private func tick() {
+        if !CGEventSource.flagsState(.combinedSessionState).isDisjoint(with: Self.bypassModifiers) {
+            stop()
+            return
+        }
         let step1 = Int32(easeStep(remaining.axis1).rounded())
         let step2 = Int32(easeStep(remaining.axis2).rounded())
         guard step1 != 0 || step2 != 0 else {

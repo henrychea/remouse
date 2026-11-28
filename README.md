@@ -47,7 +47,7 @@ Each rival's own site is the source: [Scroll Reverser](https://pilotmoon.com/scr
 ## Features
 
 - **Wheel-only inversion** — discrete wheel events are negated; continuous events (trackpad, Magic Mouse, some smooth-scroll mice) pass through untouched.
-- **Smooth scroll** — each wheel notch becomes an eased pixel glide instead of a line jump; trackpad input stays untouched, Shift + wheel still scrolls sideways, and an on/off switch lives in the settings window.
+- **Smooth scroll** — each wheel notch becomes an eased pixel glide instead of a line jump; trackpad input stays untouched, Shift + wheel still scrolls sideways, Command/Control/Option bypass smoothing so zoom and other shortcuts stay discrete, and an on/off switch lives in the settings window.
 - **Per-app exclusion** — turn smooth scroll off for apps with their own scroll engine, such as Moonlight. Invert and zoom still apply there.
 - **⌘ + wheel zoom** — hold Command and scroll to send ⌘= or ⌘−, one per notch; it follows the invert direction and has its own on/off switch.
 - **One event tap** — installed on the session, callback is allocation-free, and the tap re-enables itself if macOS disables it.
@@ -118,7 +118,7 @@ The same build runs locally: `VERSION=1.0.1 BUILD=7 scripts/make-dmg.sh` writes 
 
 A head-insert `CGEventTap` on `kCGSessionEventTap` masks `scrollWheel`. Wheel events (`kCGScrollWheelEventIsContinuous == 0`) get `DeltaAxis1/2`, `PointDeltaAxis1/2` and `FixedPtDeltaAxis1/2` negated. Continuous events — trackpads and the Magic Mouse — return untouched. The callback is allocation-free, and the tap re-enables itself on `kCGEventTapDisabledByTimeout` / `kCGEventTapDisabledByUserInput`.
 
-Smooth scroll and zoom reuse that tap. When smooth scroll is on, a discrete notch is dropped and added to a pending pixel target; a 120 Hz main-run-loop timer replays it as short `.pixel` events marked with `eventSourceUserData`, so the tap skips its own output. Each tick emits a fraction of what remains, fast spins carry further, and the timer stops below one pixel. The cached frontmost app is checked against the exclusion list first, so excluded apps get the plain event. Command + wheel posts `Cmd+=` or `Cmd+-` key events, one per notch, after the invert rule.
+Smooth scroll and zoom reuse that tap. When smooth scroll is on, a discrete notch is dropped and added to a pending pixel target; a 120 Hz main-run-loop timer replays it as short `.pixel` events marked with `eventSourceUserData`, so the tap skips its own output. Each tick emits a fraction of what remains, fast spins carry further, and the timer stops below one pixel. Holding Command, Control or Option stops any active glide and passes the plain event through without smoothing, and changing Shift clears the pending pixels before switching axes. The cached frontmost app is checked against the exclusion list first, so excluded apps get the plain event. Command + wheel posts `Cmd+=` or `Cmd+-` key events, one per notch, after the invert rule.
 
 There is still no device matching and no daemon.
 

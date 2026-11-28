@@ -35,7 +35,7 @@
   "description": "A free, open-source macOS menu-bar app that inverts mouse wheel scrolling and leaves trackpad and Magic Mouse gestures on natural scrolling. It also adds smooth scroll, per-app exclusion and ⌘ + wheel zoom.",
   "operatingSystem": "macOS 13.1+",
   "applicationCategory": "UtilitiesApplication",
-  "softwareVersion": "1.1.0",
+  "softwareVersion": "1.1.1",
   "license": "https://opensource.org/licenses/MIT",
   "downloadUrl": "https://github.com/henrychea/remouse/releases/latest",
   "image": "https://henrychea.github.io/remouse/assets/og.png",
@@ -102,7 +102,7 @@
     <ul class="grid features">
       <li><span class="dot-icon" data-glyph="wheel"></span><h3>Wheel only</h3><p>Discrete wheel events are inverted. Continuous events (trackpad, Magic Mouse, some smooth-scroll mice) pass through untouched.</p></li>
       <li><span class="dot-icon" data-glyph="switch"></span><h3>Few switches</h3><p>Invert, smooth scroll and ⌘ zoom, each on or off. Still no acceleration curves and no button remapping.</p></li>
-      <li><span class="dot-icon" data-glyph="wave"></span><h3>Smooth scroll</h3><p>Each wheel notch becomes a short eased glide. The trackpad stays untouched, and Shift + wheel still scrolls sideways.</p></li>
+      <li><span class="dot-icon" data-glyph="wave"></span><h3>Smooth scroll</h3><p>Each wheel notch becomes a short eased glide. The trackpad stays untouched, Shift + wheel still scrolls sideways, and Command, Control or Option bypass smoothing so shortcuts stay discrete.</p></li>
       <li><span class="dot-icon" data-glyph="block"></span><h3>Per-app exclusion</h3><p>Turn smooth scroll off for apps with their own scroll engine, such as Moonlight. Invert and zoom still apply.</p></li>
       <li><span class="dot-icon" data-glyph="zoom"></span><h3>⌘ + wheel zoom</h3><p>Hold Command and turn the wheel to zoom. It sends ⌘= or ⌘−, one per notch.</p></li>
       <li><span class="dot-icon" data-glyph="bolt"></span><h3>Light</h3><p>A single event tap, no helper daemons, no third-party dependencies. Polling runs only while it waits for Accessibility permission.</p></li>
@@ -150,7 +150,7 @@
       <li><span class="n">01</span><p>A head-insert event tap listens for scroll events in your session.</p></li>
       <li><span class="n">02</span><p>Trackpads, the Magic Mouse and some smooth-scroll mice send <em>continuous</em> events. Those return untouched.</p></li>
       <li><span class="n">03</span><p>Wheel mice send <em>discrete</em> events. Their deltas are negated, then passed on.</p></li>
-      <li><span class="n">04</span><p>With smooth scroll on, wheel deltas are replayed as small pixel events. ⌘ + wheel becomes ⌘= or ⌘−.</p></li>
+      <li><span class="n">04</span><p>With smooth scroll on, wheel deltas are replayed as small pixel events. Command, Control or Option skip smoothing and stop the glide; Shift still scrolls sideways. ⌘ + wheel becomes ⌘= or ⌘−.</p></li>
     </ol>
     <p class="note">macOS calls the setting Natural scrolling, and it applies to every pointing device at once: turn it on and your wheel mouse scrolls backwards too. re:Mouse separates the two, so you get natural scrolling on the trackpad but not the mouse, and the wheel keeps the direction your hands expect.</p>
   </section>
